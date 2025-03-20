@@ -1,263 +1,99 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <title>نموذج حجز موعد</title>
-  <style>
-    .title-with-image {
-      display: flex;
-      align-items: center;
-    }
-    .title-with-image img {
-      margin-right: 10px;
-      margin-left: 10px; /* يمكنك ضبط المسافة بين الصورة والنص */
-    }
-    
-    body {
-      width: 50%; /* تغيير حجم الصفحة إلى النصف */
-      margin: auto; /* لتوسيط الصفحة */
-      background-color: #f5e947e8; /* تغيير لون خلفية الصفحة إلى اللون الأصفر الفاتح */
-    }
-    
-    #message,
-    #loading-message {
-      display: none;
-      margin: 20px;
-      font-weight: bold;
-      color: green;
-      padding: 8px;
-      background-color: beige;
-      border-radius: 4px;
-      border-color: aquamarine;
-    }
-
-    #reservation-table {
-      display: none;
-      width: 100%;
-      margin-top: 20px;
-      border: 1px solid #ccc; /* حدود الجدول */
-      border-collapse: collapse; /* دمج الحدود */
-    }
-
-    #reservation-table th,
-    #reservation-table td {
-      border: 1px solid #ccc; /* حدود الخلايا */
-      padding: 8px; /* مسافة داخل الخلايا */
-      text-align: center; /* محاذاة النص في الوسط */
-    }
-
-    #reservation-table th {
-      background-color: #f2f2f2; /* لون خلفية الترويسة */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الغياب</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            direction: rtl;
+            background-color: rgb(255, 255, 255);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header img {
+            max-width: 100%;
+            height: auto;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 300px;
+            background-color: hsl(195, 84%, 53%);
+            padding: 40px;
+            border-radius: 8px;
+            margin: auto;
+        }
+        button {
+            padding: 12px;
+            background-color: hsl(98, 74%, 45%);
+            color: #111010;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 90%;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 10px 0;
+        }
+        button:hover {
+            background-color: #f1a470;
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        #exitButton {
+            background-color: red;
+        }
+        #exitButton:hover {
+            background-color: darkred;
+        }
+        #attendanceOfficerButton {
+            background-color: yellow;
+        }
+        #attendanceOfficerButton:hover {
+            background-color: orange;
+        }
+        #registerAbsenceButton {
+            background-color: hsl(133, 63%, 41%);
+            color: white;
+        }
+        #registerAbsenceButton:hover {
+            background-color: #95ebb6;
+        }
+    </style>
 </head>
 <body>
-  <img src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/4Xmmym1aVz9Ganjkc7V9/pub/IIYE9ihpfHtFspXxI7FK.png" alt="Logo" width="100%">
-  <h5 class="title" style="font-size: 24px; color: hsl(122, 88%, 17%); text-align: center;">حجز موعد زيارة مصفاة بلال</h5>
-
-  <form id="form" class="container m-4 pl-4" method="POST">
-    <div class="field">
-      <label class="label">رقم الزيارة</label>
-      <div class="control">
-        <label class="label" id="visit-num-label">Loading...</label>
-      </div>
+    <div class="header">
+        <img src="9999.png" alt="Logo" style="max-height: 100px;">
+        <h1 style="font-size: 40px; font-weight: bold;">سجيل الغياب</h1>
     </div>
 
-    <div class="field">
-      <label class="label">اسم المدرسة</label>
-      <div class="control">
-        <input class="input" type="text" placeholder="ادخل اسم المدرسة" name="Schol_name" required />
-      </div>
-    </div> 
+    <form>
+        <button type="button" id="registerAbsenceButton">تسجيل الغياب</button>
+        <button type="button" id="attendanceOfficerButton">خاص مسئول الغياب</button>
+        <button type="button" id="exitButton" onclick="window.close();">خروج</button>
+    </form>
 
-    <div class="field">
-      <label class="label">عدد الطلاب</label>
-      <div class="control">
-        <input class="input" type="number" placeholder="ادخل عدد الطلاب" name="Stu_num" required />
-      </div>
-    </div> 
+    <script>
+        document.getElementById('attendanceOfficerButton').addEventListener('click', function() {
+            const password = prompt("يرجى إدخال كلمة المرور:");
 
-    <div class="field">
-      <label class="label">تاريخ الزيارة</label>
-      <div class="control">
-        <input class="input" type="date" placeholder="ادخل التاريخ" name="Visit_Date" required />
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="label">اسم المشرف</label>
-      <div class="control">
-        <input class="input" type="text" placeholder="ادخل اسم المشرف" name="Suber_v" required />
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">رقم الهاتف</label>
-      <div class="control">
-        <input class="input" type="tel" placeholder="ادخل رقم الهاتف" name="Phone_Num" required pattern="[0-9]+" title="يرجى إدخال أرقام فقط" />
-      </div> 
-    </div>
-
-    <div class="field">
-      <label class="label">نوعية الطلاب</label>
-      <div class="control">
-        <label class="radio">
-          <input type="radio" name="Gender" value="ذكور" required /> ذكور
-        </label>
-        <label class="radio">
-          <input type="radio" name="Gender" value="اناث" required /> إناث
-        </label>
-      </div>
-    </div>
-    
-    <div class="field">
-      <label class="label">ملاحظات عامة</label>
-      <div class="control">
-        <textarea class="textarea" placeholder="ادخل ملاحظاتك هنا" name="Notes" required></textarea>
-      </div>
-    </div>
-
-    <div class="field is-flex is-justify-content-space-between">
-        <div class="control">
-          <button class="button is-primary width:20px " type="submit" id="submit-button">احجز</button>
-        </div>
-        <div class="field is-flex">
-          <div class="control">
-            <button class="button is-danger width:20px" type="button" id="cancel-button">إلغاء</button>
-          </div>
-          <div class="field is-flex" style="width: 20px;"></div> <!-- مسافة بين الأزرار -->
-          <div class="control ml-auto">
-            <button class="button is-danger width:20px" onclick="window.close()">خروج</button>
-          </div>
-        </div>
-        <div class="field is-flex">
-          <div class="control">
-            <button class="button is-info width:20px" onclick="window.location.reload();">حجز جديد</button>
-          </div>
-        </div>
-    </div>
-    
-      
-      
-  </form>
-  <div id="message"></div>
-  <div id="loading-message">جاري تنفيذ طلبكم...</div>
-
-  <table id="reservation-table" class="table is-fullwidth is-striped">
-    <thead>
-      <tr>
-        <th>رقم الزيارة</th>
-        <th>اسم المدرسة</th>
-        <th>عدد الطلاب</th>
-        <th>تاريخ الزيارة</th>
-        <th>اسم المشرف</th>
-        <th>رقم الهاتف</th>
-        <th>نوعية الطلاب</th>
-        <th>ملاحظات عامة</th>
-      </tr>
-    </thead>
-    <tbody id="reservation-table-body">
-      <!-- سيتم إضافة الصفوف هنا -->
-    </tbody>
-  </table>
-
-  <script>
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbySvXe4S51qzCdMntTSdeeNmV9OsL9RukaWcs4hscfBIJ3cKKkABPFQaRmwTgZFlf0M/exec';
-
-    document.addEventListener("DOMContentLoaded", function() {
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // التمرير السلس إلى أعلى الصفحة عند تحميلها
-
-      fetch(`${scriptUrl}?getLastVisitNum=true`)
-        .then(response => response.json())
-        .then(data => {
-          const visitNum = data.lastVisitNum + 1;
-          document.getElementById('visit-num-label').textContent = visitNum;
-          document.getElementById('form').visitNum = visitNum;
-        })
-        .catch(error => {
-          console.error('Error fetching last visit number:', error);
-          document.getElementById('visit-num-label').textContent = 'Error loading visit number';
+            if (password === "77778888") { // استبدل "77778888" بكلمة المرور المطلوبة
+                window.location.href = "https://script.google.com/macros/s/AKfycbyEpsniI_mGNFuToi2bFhroF3ScLcjXhkbR7toAbNum3FVRBgw3AxBuUjzL_6m-pgJZQw/exec";
+            } else {
+                alert("كلمة المرور غير صحيحة.");
+            }
         });
-    });
 
-    document.getElementById("form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      document.getElementById("loading-message").style.display = "block"; // عرض رسالة جاري تنفيذ طلبكم
-      document.getElementById("submit-button").disabled = true;
-
-      var formData = new FormData(this);
-      formData.append("Visit_Num", this.visitNum);
-
-      var keyValuePairs = [];
-      for (var pair of formData.entries()) {
-        keyValuePairs.push(pair[0] + "=" + pair[1]);
-      }
-
-      var formDataString = keyValuePairs.join("&");
-
-      fetch(scriptUrl, {
-        redirect: "follow",
-        method: "POST",
-        body: formDataString,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        },
-      })
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById("loading-message").style.display = "none"; // إخفاء رسالة جاري تنفيذ طلبكم
-          if (data.success) {
-            document.getElementById("message").textContent = `تم تأكيد حجزكم بنجاح! رقم الحجز هو: ${this.visitNum}`;
-            document.getElementById("message").style.backgroundColor = "green";
-            document.getElementById("message").style.color = "beige";
-
-            // عرض بيانات الحجز في الجدول
-            const reservationTableBody = document.getElementById("reservation-table-body");
-            const newRow = reservationTableBody.insertRow();
-            
-            newRow.innerHTML = `
-              <td>${this.visitNum}</td>
-              <td>${formData.get("Schol_name")}</td>
-              <td>${formData.get("Stu_num")}</td>
-              <td>${formData.get("Visit_Date")}</td>
-              <td>${formData.get("Suber_v")}</td>
-              <td>${formData.get("Phone_Num")}</td>
-              <td>${formData.get("Gender")}</td>
-              <td>${formData.get("Notes")}</td>
-            `;
-
-            document.getElementById("reservation-table").style.display = "table";
-            document.getElementById("reservation-table").scrollIntoView({ behavior: 'smooth' }); // التمرير السلس إلى أسفل الصفحة
-          } else {
-            document.getElementById("message").textContent = "An error occurred while submitting the form.";
-            document.getElementById("message").style.backgroundColor = "red";
-            document.getElementById("message").style.color = "white";
-          }
-          document.getElementById("message").style.display = "block";
-          document.getElementById("submit-button").disabled = false;
-          document.getElementById("form").reset();
-
-          setTimeout(function() {
-            document.getElementById("message").style.display = "none";
-          }, 2600);
-          
-        })
-        .catch(error => {
-          document.getElementById("loading-message").style.display = "none"; // إخفاء رسالة جاري تنفيذ طلبكم في حال الخطأ أيضًا
-          console.error(error);
-          document.getElementById("message").textContent = "An error occurred while submitting the form.";
-          document.getElementById("message").style.backgroundColor = "red";
-          document.getElementById("message").style.color = "white";
-          document.getElementById("message").style.display = "block";
-          document.getElementById("submit-button").disabled = false;
+        document.getElementById('registerAbsenceButton').addEventListener('click', function() {
+            window.location.href = "https://script.google.com/macros/s/AKfycbxsETn0DPRaDtrjC_FxpMdW5Ym8d14EJm8SB7pu3IEUEJ7x59aq0B8M0XYcbT86--FWUA/exec";
         });
-    });
-
-    document.getElementById("cancel-button").addEventListener("click", function() {
-      document.getElementById("form").reset();
-      document.getElementById("message").style.display = "none";
-    });
-  </script>
+    </script>
 </body>
 </html>
